@@ -1,10 +1,12 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
-const PublicRoute = ({ component: Component, restricted, ...rest }) => (
-  // restricted = false meaning public route
-  // restricted = true meaning restricted route
-  <Route {...rest} render={(props) => (restricted ? <Switch to="/" /> : <Component {...props} />)} />
-);
+const PublicRoute = ({ restricted, children }) => {
+  const accessToken = useSelector((state) => state.user.accessToken);
+  const isAuthenticated = !!accessToken;
+
+  return isAuthenticated && restricted ? <Navigate to="/" /> : children;
+};
 
 export default PublicRoute;

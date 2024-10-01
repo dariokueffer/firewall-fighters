@@ -9,4 +9,4 @@ docker-compose up
 
 ## Problems
 
--[] In the frontend the routing doesn't work properly, when clicking on link one has to reload to page in order to take effect. Should be an easy fix.
+- [ ] In the frontend the routing doesn't work properly, when clicking on link one has to reload to page in order to take effect. Should be an easy fix.
