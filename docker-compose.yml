@@ -30,6 +30,8 @@ services:
             - mongo-data:/data/db
         ports:
             - '27017:27017'
+        environment:
+            MONGO_INITDB_DATABASE: reactcalendar_db
 
 volumes:
     mongo-data:
