@@ -15,7 +15,7 @@ docker-compose up
 
 ## Security Features
 
--[ ] Secure MongoDB database with authentication
+- [ ] Secure MongoDB database with authentication
 
 ## Acknowledgement
 
