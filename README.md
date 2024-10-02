@@ -19,5 +19,5 @@ docker-compose up
 
 ## Acknowledgement
 
-As a starting point for this challenge task we used (Joey Kim)[http://www.josephikim.com]'s (React Calendar)[https://github.com/josephikim/react-calendar].
+As a starting point for this challenge task we used [Joey Kim](http://www.josephikim.com)'s [React Calendar](https://github.com/josephikim/react-calendar).
 
