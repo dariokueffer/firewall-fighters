@@ -5,7 +5,9 @@ import CalendarService from 'services/CalendarService';
 const MONGO_HOSTNAME = process.env.MONGO_HOSTNAME;
 const MONGO_PORT = process.env.MONGO_PORT;
 const MONGO_DB = process.env.MONGO_DB;
-const MONGO_URL = `mongodb://${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DB}`;
+const MONGO_USERNAME = process.env.MONGO_USERNAME;
+const MONGO_PASSWORD = process.env.MONGO_PASSWORD;
+const MONGO_URL = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DB}?authSource=admin`;
 
 const mongoose = db.mongoose;
 const Role = db.Role;

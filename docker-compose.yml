@@ -22,7 +22,7 @@ services:
             - '5000'
         command: sh -c "npm install && npm run build && npm start"
         environment:
-            MONGO_URL: mongodb://mongo:27017/mydatabase
+            MONGO_URL: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/${MONGO_DATABASE}
         depends_on:
             - mongo
         networks:
@@ -35,7 +35,9 @@ services:
         expose:
             - '27017'
         environment:
-            MONGO_INITDB_DATABASE: reactcalendar_db
+            MONGO_INITDB_DATABASE: ${MONGO_DATABASE}
+            MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+            MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
         networks:
             app-network:
 
