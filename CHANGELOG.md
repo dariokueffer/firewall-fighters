@@ -2,7 +2,8 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Security Features]
+## Security Features
+- [Architecture / Backend] Changed the JWT_SECURITY_KEY to something more secure.
 - [Architecture / Database] Changed username and password for MongoDB.
 - [Security Container] Added rate limiting with nginx for backend and frontend.
 - [Security Container] In the security container, an nginx proxy is added to proxy to backend and frontend.
