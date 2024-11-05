@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Security Features]
+
+- [Architecture] In the security container, an nginx proxy is added to proxy to backend and frontend.
+- [Architecture] Backend, Frontend and Database containers is not anymore accessible from outside the docker network.
+- [Architecture] An 4th container for additional security feature is added.
+
 ## [Unreleased]
 
 ### Frontend
