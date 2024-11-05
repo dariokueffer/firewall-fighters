@@ -5,7 +5,7 @@ services:
         working_dir: /app
         volumes:
             - ./frontend:/app
-        ports:
+        expose:
             - '3000'
         command: sh -c "npm install && npm start"
         depends_on:
@@ -18,7 +18,7 @@ services:
         working_dir: /app
         volumes:
             - ./backend:/app
-        ports:
+        expose:
             - '5000'
         command: sh -c "npm install && npm run build && npm start"
         environment:
@@ -32,7 +32,7 @@ services:
         image: mongo:latest
         volumes:
             - mongo-data:/data/db
-        ports:
+        expose:
             - '27017'
         environment:
             MONGO_INITDB_DATABASE: reactcalendar_db
