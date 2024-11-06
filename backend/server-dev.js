@@ -24,6 +24,10 @@ app.use(express.static(BUILD_DIR));
 // Use API routes
 app.use('/api/v1', router);
 
+app.get('/hello', (req, res) => {
+  res.send('Hello, World!');
+});
+
 app.get('*', (req, res) => {
   res.sendFile(HTML_FILE);
 });

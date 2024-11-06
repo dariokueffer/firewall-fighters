@@ -7,7 +7,9 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install dependencies, ensure bcrypt is rebuilt for the container architecture
-RUN npm install && npm rebuild bcrypt --build-from-source
+#RUN npm install && npm rebuild bcrypt --build-from-source
+#RUN npm install --only=dev && npm install && npm rebuild bcrypt --build-from-source
+RUN npm install
 
 # Copy the rest of the application
 COPY . .

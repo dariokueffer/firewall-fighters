@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import Calendar from './Calendar';
 import { DuplicateKeyError } from '../utils/databaseErrors';
 import { userColors, systemColors } from 'config/appConfig';
