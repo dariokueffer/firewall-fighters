@@ -9,9 +9,18 @@
 To build and install run the following commands:
 
 ```
+cd backend
 docker-composer build
 docker-compose up
 ```
+
+## Backend Development 
+
+```
+npm install
+npm run dev
+```
+
 
 ## Security Features
 
