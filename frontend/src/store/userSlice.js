@@ -37,9 +37,6 @@ export const { idUpdated, usernameUpdated, accessTokenUpdated, refreshTokenUpdat
 
 export default userSlice.reducer;
 
-// State selectors
-const selectUserId = (state) => state.user.id;
-const selectUsername = (state) => state.user.username;
 
 //
 // Bound action creators

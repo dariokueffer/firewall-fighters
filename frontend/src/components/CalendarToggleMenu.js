@@ -1,7 +1,5 @@
 import React from 'react';
-import { Row, Col } from 'react-bootstrap';
 import CalendarToggleMenuItem from './CalendarToggleMenuItem';
-import styles from '../styles/CalendarToggleMenu.module.css';
 
 const CalendarToggleMenu = ({ calendars, calendarIds }) => {
   // sort calendars for render:
@@ -12,17 +10,30 @@ const CalendarToggleMenu = ({ calendars, calendarIds }) => {
     .sort((a, b) => calendars[b].userDefault - calendars[a].userDefault)
     .sort((a, b) => (calendars[b].user_id === 'system') - (calendars[a].user_id === 'system'));
 
-  return (
-    <div className={styles.container}>
-      <Row>
-        <Col>
-          <label className="text-primary">My Calendars</label>
-        </Col>
-      </Row>
+  const sharedCalendars = Object.values(calendars).filter(calendar => calendar.isShared);
+  const notSharedCalendars = Object.values(calendars).filter(calendar => !calendar.isShared);
 
-      {orderedCalendarIds.map((calendarId) => (
-        <CalendarToggleMenuItem id={calendarId} key={calendarId} calendar={calendars[calendarId]} />
-      ))}
+  return (
+    <div>
+      {/* Shared calendars */}
+      <h5>Shared with me</h5>
+      {sharedCalendars.length > 0 ? (
+        sharedCalendars.map((calendar) => (
+          <CalendarToggleMenuItem key={calendar.id} id={calendar.id} calendar={calendar} />
+        ))
+      ) : (
+        <p>No shared calendars</p>
+      )}
+
+      {/* Non-shared calendars */}
+      <h5>My Calendars</h5>
+      {notSharedCalendars.length > 0 ? (
+        notSharedCalendars.map((calendar) => (
+          <CalendarToggleMenuItem key={calendar.id} id={calendar.id} calendar={calendar} />
+        ))
+      ) : (
+        <p>No personal calendars</p>
+      )}
     </div>
   );
 };

@@ -21,7 +21,6 @@ const calendarsSlice = createSlice({
           ...state.byId[element.id],
           ...element
         };
-
         allIds.push(element.id);
       });
 
@@ -29,6 +28,7 @@ const calendarsSlice = createSlice({
       state.allIds = allIds;
     },
     calendarUpdated(state, action) {
+
       state.byId = {
         ...state.byId,
         [action.payload.id]: {
@@ -87,6 +87,18 @@ export const deleteCalendar = (id) => async (dispatch) => {
     const res = await userApi.delete(`/calendars/${id}`);
 
     dispatch(calendarDeleted(res.data.id));
+  } catch (e) {
+    throw e;
+  }
+};
+
+export const shareCalendar = (data) => async (dispatch) => {
+  try {
+    // Call your API to share the calendar
+    const res = await userApi.post(`/calendars/${data.calendarId}/share`, data);
+
+    // Dispatch an action to update the state after sharing
+    dispatch(calendarUpdated(res.data));
   } catch (e) {
     throw e;
   }

@@ -40,6 +40,7 @@ class CalendarController {
 
   updateSettings = async (req, res, next) => {
     try {
+
       const response = await this.userService.updateCalendarSettings(req.auth.user, req.body);
 
       return res.status(response.statusCode).send(response.data);
@@ -69,6 +70,29 @@ class CalendarController {
       return next(e);
     }
   };
+
+  shareCalendar = async (req, res, next) => {
+    try {
+      const { calendarId } = req.params;
+      const { userId, visibility, userDefault, color, isShared } = req.body; // Use `userDefault` here
+
+  
+      // Share the calendar
+      const calendar = await this.service.shareCalendar(calendarId, userId);
+  
+      // Update the calendarSettings for the user with whom the calendar is shared
+      await this.userService.updateSharedCalendarSettings(userId, calendarId, userDefault, visibility, color, isShared);
+  
+      // Send a success response
+      return res.status(200).send({
+        message: 'Calendar shared successfully',
+        calendar
+      });
+    } catch (e) {
+      return next(e);
+    }
+  };
+  
 }
 
 export default new CalendarController(calendarService, userService);

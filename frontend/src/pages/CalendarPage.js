@@ -19,7 +19,7 @@ const CalendarPage = () => {
       dispatch(getUserEvents());
       shouldInitData.current = false;
     }
-  }, []);
+  });
 
   // app state
   const calendars = useSelector((state) => state.calendars.byId);

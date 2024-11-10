@@ -6,6 +6,7 @@ import userReducer from './userSlice';
 import eventsReducer from './eventsSlice';
 import calendarsReducer from './calendarsSlice';
 import appReducer from './appSlice';
+import usersReducer from './usersSlice';
 
 const doCreateStore = () => {
   const persistedState = loadState();
@@ -16,6 +17,7 @@ const doCreateStore = () => {
     user: userReducer,
     events: eventsReducer,
     calendars: calendarsReducer,
+    users: usersReducer,
     app: appReducer
   });
 

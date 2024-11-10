@@ -10,7 +10,8 @@ class CalendarService {
     try {
       const _obj = {
         name: data.name,
-        user_id: data.user_id
+        user_id: data.user_id,
+        shared_with: data.shared_with
       };
 
       return await this.model.create(_obj);
@@ -33,9 +34,12 @@ class CalendarService {
   // Get user and system calendars
   getUserCalendars = async (userId) => {
     try {
-      // Mongoose returns [] for .find query with no matches
-      const result = await this.model.find({ user_id: { $in: [userId, 'system'] } });
-
+      const result = await this.model.find({
+        $or: [
+          { user_id: { $in: [userId, 'system'] } },
+          { shared_with: userId }
+        ]
+      });
       return new HttpResponse(result);
     } catch (e) {
       throw e;
@@ -70,6 +74,27 @@ class CalendarService {
       } else {
         return new HttpResponse(result, { deleted: true });
       }
+    } catch (e) {
+      throw e;
+    }
+  };
+
+  shareCalendar = async (calendarId, userId) => {
+    try {
+
+      // Find the calendar
+      const calendar = await this.model.findById(calendarId);
+      if (!calendar) {
+        throw new Error('Calendar not found');
+      }
+
+      // Add the user to the shared_with array
+      if (!calendar.shared_with.includes(userId)) {
+        calendar.shared_with.push(userId);
+        await calendar.save();
+      }
+
+      return calendar;
     } catch (e) {
       throw e;
     }
