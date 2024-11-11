@@ -30,9 +30,32 @@ const checkRolesExist = (req, res, next) => {
   return next();
 };
 
+const checkPasswordComplexEnough = (req, res, next) => {
+  const password = req.body.password;
+  const passwordRegex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*(),.?":{}|<>])(?=.{8,})');
+
+  if (!passwordRegex.test(password)) {
+    throw new BadRequestError('Password must contain at least a lowercase character, an uppercase character, a digit, a special character and must be at least eight character long.', { errorCode: 'password' });
+  }
+
+  return next();
+}
+
+const checkUsernameLongEnough = (req, res, next) => {
+  const username = req.body.username;
+
+  if (username.length < 4) {
+    throw new BadRequestError('Username is too short', { errorCode: 'username' });
+  }
+
+  return next();
+}
+
 const verifyRegistration = {
   checkDuplicateUsername,
-  checkRolesExist
+  checkRolesExist,
+  checkPasswordComplexEnough,
+  checkUsernameLongEnough
 };
 
 export default verifyRegistration;
