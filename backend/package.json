@@ -6,7 +6,7 @@
     "scripts": {
         "build": "webpack --config webpack.config.js",
         "start": "node build/server.bundle.js",
-        "dev": "cross-env PORT=5001 MONGO_HOSTNAME=localhost concurrently \"webpack --config webpack.config.js --watch\" \"nodemon build/server.bundle.js\""
+        "dev": "concurrently \"webpack --config webpack.config.js --watch\" \"nodemon build/server.bundle.js\""
     },
     "dependencies": {
         "bcryptjs": "^2.4.3",
