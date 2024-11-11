@@ -9,7 +9,6 @@
         "dev": "concurrently \"webpack --config webpack.config.js --watch\" \"nodemon build/server.bundle.js\""
     },
     "dependencies": {
-        "bcrypt": "^5.1.1",
         "bcryptjs": "^2.4.3",
         "cors": "^2.8.5",
         "css-loader": "^7.1.2",
@@ -29,6 +28,7 @@
         "@babel/preset-env": "^7.25.4",
         "babel-loader": "^9.2.1",
         "concurrently": "^9.1.0",
+        "cross-env": "^7.0.3",
         "dotenv-webpack": "^8.1.0",
         "nodemon": "^3.1.7",
         "webpack": "^5.95.0",
