@@ -61,9 +61,9 @@ const verifyURIAuth = async (req, res, next) => {
       // fetch target calendar
       const calendar = await calendarService.getOne(req.params.calendarId);
 
-      if (req.auth.user !== calendar.data.user_id) {
+      if (req.auth.user !== calendar.data.user_id && !calendar.data.shared_with.includes(req.auth.user)) {
         return res.status(403).send({ message: 'Requires admin role!', errorCode: 'role' });
-      }
+    }
       return next();
     }
 
@@ -76,10 +76,15 @@ const verifyURIAuth = async (req, res, next) => {
           $eq: req.params.calendarId
         }
       });
+      if (user) {
+        return next();
+    }
 
-      if (!user) {
-        return res.status(403).send({ message: 'Requires admin role!', errorCode: 'role' });
-      }
+    // If not found in user settings, check if they are in the shared_with list of the calendar
+    const calendar = await calendarService.getOne(req.params.calendarId);
+    if (calendar && calendar.data.shared_with.includes(req.auth.user)) {
+        return next();
+    }
       return next();
     }
 
@@ -89,9 +94,9 @@ const verifyURIAuth = async (req, res, next) => {
       // fetch corresponding calendar
       const calendar = await calendarService.getOne(event.data.calendar);
 
-      if (req.auth.user !== calendar.data.user_id) {
+      if (req.auth.user !== calendar.data.user_id && !calendar.data.shared_with.includes(req.auth.user)) {
         return res.status(403).send({ message: 'Requires admin role!', errorCode: 'role' });
-      }
+    }
       return next();
     }
 

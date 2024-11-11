@@ -7,7 +7,7 @@ const router = express.Router();
 // POST request to register user
 router.post(
   '/register',
-  [verifyRegistration.checkDuplicateUsername, verifyRegistration.checkRolesExist],
+  [verifyRegistration.checkDuplicateUsername, verifyRegistration.checkUsernameLongEnough, verifyRegistration.checkPasswordComplexEnough, verifyRegistration.checkRolesExist],
   [UserController.register, UserController.login]
 );
 
@@ -19,5 +19,7 @@ router.post('/refreshtoken', UserController.refreshToken);
 
 // PUT request to update user
 router.put('/:userId', [authJwt.verifyToken, authJwt.verifyURIAuth], UserController.update);
+
+router.get('/users/:userId', UserController.getUsers);
 
 export default router;

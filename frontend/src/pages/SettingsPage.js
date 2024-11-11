@@ -8,7 +8,7 @@ const SettingsPage = () => {
   return (
     <div>
       <Row className="justify-content-center">
-        <Col md={8}>
+        <Col lg={12}>
           <ContentWrapper>
             <div className="heading text-primary text-center mt-4 mb-5">
               <h4>User Settings</h4>

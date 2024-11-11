@@ -79,6 +79,15 @@ class UserController {
       return next(e);
     }
   };
+
+  getUsers = async (req, res, next) => {
+    try {
+      const response = await this.service.getAllUsernames(req.params.userId); // Call the service method
+      return res.status(200).send(response.data); 
+    } catch (e) {
+      return next(e);
+    }
+  };
 }
 
 export default new UserController(userService);

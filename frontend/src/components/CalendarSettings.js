@@ -1,13 +1,20 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { validateFields } from '../validation';
-import { createCalendar, updateCalendar, deleteCalendar } from '../store/calendarsSlice';
+import { createCalendar, updateCalendar, deleteCalendar, shareCalendar } from '../store/calendarsSlice';
 import CalendarSettingsItem from './CalendarSettingsItem';
+import { fetchUsernames } from '../store/usersSlice';
 
 const CalendarSettings = () => {
+  const dispatch = useDispatch();
   const calendars = useSelector((state) => state.calendars.byId);
   const calendarIds = useSelector((state) => state.calendars.allIds);
   const userId = useSelector((state) => state.user.id);
+  const usernames = useSelector((state) => state.users.usernames);
+
+  useEffect(() => {
+    dispatch(fetchUsernames(userId));
+  }, [dispatch, userId]);
 
   // sort calendars for render:
   // 1. system cals
@@ -31,7 +38,9 @@ const CalendarSettings = () => {
           createAction={createCalendar}
           updateAction={updateCalendar}
           deleteAction={deleteCalendar}
+          shareCalendar={shareCalendar}
           validation={validateFields.validateCalendarName}
+          usernames={usernames}
         />
       ))}
 

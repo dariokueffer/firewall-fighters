@@ -32,6 +32,13 @@ class UserService {
         throw new NotFoundError('Invalid username', { errorCode: 'username' });
       }
 
+      const isLockedOut = user.validateLockout();
+
+      if (isLockedOut) {
+        throw new AuthorizationError('Account is locked out. Please try again later.', { errorCode: 'lockout' });
+      }
+
+
       // process login
       const validated = await user.validatePassword(password);
 
@@ -73,12 +80,28 @@ class UserService {
       user_id: entry.calendar.user_id,
       userDefault: entry.userDefault,
       visibility: entry.visibility,
-      color: entry.color
+      color: entry.color,
+      isShared: entry.isShared,
+      sharedWith: entry.calendar.sharedWith
     }));
 
     httpResponse.data.calendarSettings = flattenedCalendarSettings;
 
     return httpResponse.data;
+  };
+
+
+  getAllUsernames = async (userId) => {
+    try {
+      // Retrieve only `username` and `_id` fields for all users
+      const users = await this.model.find({ _id: { $ne: userId } }, 'username _id');
+
+
+      // Wrap in an HttpResponse
+      return new HttpResponse(users);
+    } catch (e) {
+      throw e;
+    }
   };
 
   refreshToken = async (requestToken) => {
@@ -180,6 +203,7 @@ class UserService {
         update[`calendarSettings.$[i].${key}`] = diffedData[key];
       });
 
+
       const user = await this.model.findOneAndUpdate(
         { _id: userId },
         { $set: update },
@@ -202,6 +226,38 @@ class UserService {
       httpResponse.data = flattenedCalendarSettings;
 
       return httpResponse;
+    } catch (e) {
+      throw e;
+    }
+  };
+
+  updateSharedCalendarSettings = async (userId, calendarId, userDefault, visibility, color, isShared) => {
+    try {
+      const user = await this.model.findById(userId);
+      if (!user) {
+        throw new Error('User not found');
+      }
+
+      // Create the new calendar setting to add to the user's calendarSettings
+      const newCalendarSetting = {
+        calendar: calendarId,
+        userDefault,
+        visibility,
+        color,
+        isShared: true
+      };
+
+      // Check if the calendar already exists in the user's settings
+      const existingCalendar = user.calendarSettings.find(
+        (entry) => entry.calendar === calendarId
+      );
+
+      if (!existingCalendar) {
+        user.calendarSettings.push(newCalendarSetting);
+        await user.save();
+      }
+
+      return user;
     } catch (e) {
       throw e;
     }

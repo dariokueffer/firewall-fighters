@@ -24,6 +24,13 @@ app.use(express.static(BUILD_DIR));
 // Use API routes
 app.use('/api/v1', router);
 
+app.get('/hello', (req, res) => {
+  res.send('Hello, World!');
+});
+
+
+
+
 app.get('*', (req, res) => {
   res.sendFile(HTML_FILE);
 });
@@ -47,6 +54,8 @@ app.use(function (err, req, res, next) {
 
   res.status(status).send(response);
 });
+
+console.log(`PORT: ${process.env.PORT}`);
 
 app.listen(PORT, () => {
   console.log(`server started at http://localhost:${PORT}`);

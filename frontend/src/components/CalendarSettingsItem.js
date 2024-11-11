@@ -15,8 +15,10 @@ const CalendarSettingsItem = ({
   createAction,
   updateAction,
   deleteAction,
+  shareCalendar,
   validation,
-  fixedEditMode
+  fixedEditMode,
+  usernames
 }) => {
   const dispatch = useDispatch();
   const [inputValue, setInputValue] = useState(calendar ? calendar[settingType] : '');
@@ -24,10 +26,13 @@ const CalendarSettingsItem = ({
   const [editMode, setEditMode] = useState(fixedEditMode ?? false);
   const [inputError, setInputError] = useState('');
   const [validateOnChange, setValidateOnChange] = useState(false);
+  const [selectedUser, setSelectedUser] = useState('');
+
+  const userList = usernames;
 
   const isEditable = calendar?.user_id === userId;
   const isDeleteable = isEditable && calendar.userDefault === false;
-  const isBadged = calendar?.userDefault === true || calendar?.user_id === 'system';
+  const isBadged = calendar && (calendar.userDefault === true || calendar.user_id === 'system' || (calendar.user_id !== userId && calendar.userDefault !== true));
 
   const handleChange = (e) => {
     const targetValue = e.target.value;
@@ -134,6 +139,48 @@ const CalendarSettingsItem = ({
     setValidateOnChange(false);
   };
 
+  const handleShare = () => {
+    if (!selectedUser) {
+      alert('Please select a user to share the calendar with.');
+      return;
+    }
+
+    if (selectedUser === userId) {
+      alert("You can't share with yourself.");
+      return;
+    }
+
+    const selectedUserData = userList.find(user => user.id === selectedUser);
+    if (!selectedUserData) {
+      alert("Selected user not found.");
+      return;
+    }
+
+    // Prepare the data
+    const sharedUserId = selectedUser; // assuming the user object has an `id` field
+
+    const data = {
+      calendarId: calendar.id,
+      userId: sharedUserId,
+      visibility: calendar.visibility, // or set to a specific value
+      userDefault: false, // or set to a specific value
+      color: calendar.color,
+      shared: true // set color as per your logic
+    };
+
+    // Call a Redux action to update the calendar and user models
+    dispatch(shareCalendar(data))
+      .then(() => {
+        alert(`Calendar shared with ${selectedUserData.username}`);
+      })
+      .catch((e) => {
+        const msg = getErrorMessage(e);
+        alert(`Error sharing calendar: ${msg}`);
+      });
+  };
+
+
+
   const renderButtons = () => {
     if (fixedEditMode === true) {
       return (
@@ -164,9 +211,35 @@ const CalendarSettingsItem = ({
             </>
           )}
           {editMode === false && (
-            <Button className={styles.button} type="button" variant="primary" disabled={editMode} onClick={handleEdit}>
-              Edit
-            </Button>
+            <>
+              <Row>
+                <Col xs="auto">
+                  <Button className={styles.button} type="button" variant="primary" disabled={editMode} onClick={handleEdit}>
+                    Edit
+                  </Button>
+                </Col>
+                <Col xs="auto">
+                  <select
+                    className={styles.select}
+                    disabled={editMode}
+                    value={selectedUser} // Bind value to state
+                    onChange={(e) => setSelectedUser(e.target.value)} // Update selectedUser on change
+                  >
+                    <option value="" disabled>Select a user</option>
+                    {userList?.map((user) => (
+                      <option key={user.id} value={user.id}> {/* Set the ID as the value */}
+                        {user.username} {/* Display only the username */}
+                      </option>
+                    ))}
+                  </select>
+                </Col>
+                <Col xs="auto">
+                  <Button className={styles.button} type="button" variant="warning" disabled={editMode} onClick={handleShare}>
+                    Share
+                  </Button>
+                </Col>
+              </Row>
+            </>
           )}
         </Col>
       );
@@ -188,6 +261,11 @@ const CalendarSettingsItem = ({
             {calendar.user_id === 'system' && (
               <Badge style={{ width: '70px', padding: '0.5rem' }} pill variant="secondary">
                 System
+              </Badge>
+            )}
+            {calendar?.user_id !== 'system' && calendar?.userDefault !== true && calendar?.user_id !== userId && (
+              <Badge  bg='secondary'style={{ width: '70px', padding: '0.5rem', backgroundColor: '#ffc107', color: '#ffc107' }} pill variant="secondary">
+                Shared
               </Badge>
             )}
           </div>

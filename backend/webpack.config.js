@@ -4,6 +4,7 @@ const Dotenv = require('dotenv-webpack');
 const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
+    //watch: true,
     name: 'server',
     target: 'node',
     entry: './server-dev.js', // Adjusted for your root-level entry file
