@@ -38,10 +38,31 @@ services:
         networks:
             - app-network
 
-    security:
-        build: ./security
+    modsecurity:
+        image: owasp/modsecurity-crs:4.7.0-nginx-202410090410
+        container_name: app-modsecurity
+        depends_on:
+            - reverse_proxy
         ports:
-            - '80:80'
+            - '80:8080'
+            - '443:8443'
+        environment:
+            - BACKEND=http://reverse_proxy
+            - PORT=8080
+            - BACKEND_SSL=false
+            - SSL=false
+            - PROXY_SSL_VERIFY=off
+            # ModSecurity specific settings
+            - MODSEC_RULE_ENGINE=On
+            - MODSEC_AUDIT_ENGINE=On
+            - PARANOIA=1 # Paranoia level (1-4)
+        networks:
+            - app-network
+
+    reverse_proxy:
+        build: ./reverse_proxy
+        expose:
+            - '80'
         depends_on:
             - frontend
         networks:
