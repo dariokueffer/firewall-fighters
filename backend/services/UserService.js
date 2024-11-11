@@ -32,6 +32,13 @@ class UserService {
         throw new NotFoundError('Invalid username', { errorCode: 'username' });
       }
 
+      const isLockedOut = user.validateLockout();
+
+      if (isLockedOut) {
+        throw new AuthorizationError('Account is locked out. Please try again later.', { errorCode: 'lockout' });
+      }
+
+
       // process login
       const validated = await user.validatePassword(password);
 
@@ -88,8 +95,8 @@ class UserService {
     try {
       // Retrieve only `username` and `_id` fields for all users
       const users = await this.model.find({ _id: { $ne: userId } }, 'username _id');
-    
-      
+
+
       // Wrap in an HttpResponse
       return new HttpResponse(users);
     } catch (e) {
@@ -177,7 +184,7 @@ class UserService {
     try {
       // get calendar settings properties from model schema
       const calendarSettingsKeys = Object.keys(this.model.schema.tree.calendarSettings[0]);
-     
+
       const diffedData = {};
 
       calendarSettingsKeys.forEach((key) => {
@@ -202,7 +209,7 @@ class UserService {
         { $set: update },
         { arrayFilters: [{ 'i.calendar': data.id }], new: true }
       );
-      
+
       if (!user) {
         throw new NotFoundError(`Update failed with user id: ${userId}`);
       }
@@ -224,7 +231,7 @@ class UserService {
     }
   };
 
-  updateSharedCalendarSettings = async (userId, calendarId, userDefault ,visibility, color, isShared) => {
+  updateSharedCalendarSettings = async (userId, calendarId, userDefault, visibility, color, isShared) => {
     try {
       const user = await this.model.findById(userId);
       if (!user) {
@@ -240,7 +247,6 @@ class UserService {
         isShared: true
       };
 
-      console.log(newCalendarSetting)
       // Check if the calendar already exists in the user's settings
       const existingCalendar = user.calendarSettings.find(
         (entry) => entry.calendar === calendarId

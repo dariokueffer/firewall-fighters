@@ -16,7 +16,15 @@ const schema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, 'Enter a password.'],
-    minLength: [4, 'Password should be at least four characters']
+    minLength: [8, 'Password should be at least four characters']
+  },
+  failedLoginAttempts: {
+    type: Number,
+    default: 0
+  },
+  lastFailedLoginAttempt: {
+    type: Date,
+    default: null
   },
   roles: [
     {
@@ -147,8 +155,28 @@ schema.statics.findByUsername = async function (username) {
 };
 
 schema.methods.validatePassword = async function validatePassword(candidatePassword) {
-  return bcrypt.compare(candidatePassword, this.password);
+  const isValid = await bcrypt.compare(candidatePassword, this.password); // Await the bcrypt comparison
+
+  if (!isValid) {
+    this.failedLoginAttempts += 1;
+    this.lastFailedLoginAttempt = new Date();
+    await this.save();
+  } else {
+    this.failedLoginAttempts = 0;
+    this.lastFailedLoginAttempt = null;
+    await this.save();
+  }
+
+  return isValid;
 };
+
+schema.methods.validateLockout = function validateLockout() {
+  const lockoutTime = new Date(this.lastFailedLoginAttempt);
+  lockoutTime.setMinutes(lockoutTime.getMinutes() + 15);
+
+  return this.failedLoginAttempts >= 5 && new Date() < lockoutTime;
+}
+
 
 const User = mongoose.model('User', schema);
 
