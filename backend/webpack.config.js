@@ -27,10 +27,12 @@ module.exports = {
         modules: [path.resolve(__dirname), 'node_modules'],
         extensions: ['.js', '.json'],
     },
-    externals: [nodeExternals()],
+    externals: [nodeExternals({
+        allowlist: ['dotenv']
+    })],
     plugins: [
         new Dotenv({
-            path: process.env.DOTENV_CONFIG_PATH || '.env.dev',  // Use the env var from your npm script
+            path: process.env.DOTENV_CONFIG_PATH || '.env.development',  // Use the env var from your npm script
             systemvars: true,  // Load system environment variables as well
             safe: true,  // Load '.env.example' to verify the '.env' variables are all set
             allowEmptyValues: true,  // Allow empty string in environment variables
