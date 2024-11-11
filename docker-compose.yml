@@ -4,8 +4,8 @@ services:
         working_dir: /app
         volumes:
             - ./frontend:/app
-        expose:
-            - '3000'
+        ports:
+            - '3000:3000'
         command: sh -c "npm install && npm start"
         depends_on:
             - backend
@@ -42,11 +42,11 @@ services:
         image: owasp/modsecurity-crs:4.7.0-nginx-202410090410
         container_name: app-modsecurity
         depends_on:
-            - reverse_proxy
+            - backend
         ports:
             - '80:8080'
         environment:
-            - BACKEND=http://reverse_proxy
+            - BACKEND=http://backend:5000
             - PORT=8080
             - BACKEND_SSL=false
             - SSL=false
@@ -55,15 +55,6 @@ services:
             - MODSEC_RULE_ENGINE=On
             - MODSEC_AUDIT_ENGINE=On
             - PARANOIA=1 # Paranoia level (1-4)
-        networks:
-            - app-network
-
-    reverse_proxy:
-        build: ./reverse_proxy
-        expose:
-            - '80'
-        depends_on:
-            - frontend
         networks:
             - app-network
 
