@@ -17,11 +17,7 @@ docker-composer build
 docker-compose up -d
 ```
 
-## Development
-
-To develop in the backend, some parts might need adjustment, specially in the `backend/.env.development` file and also the mongodb ports should be exposed, such that running `npm run dev` within the backend folder can access the mongodb.
-
-## Installtion
+## Installation
 
 To build and install run the following commands:
 
@@ -34,7 +30,11 @@ docker-compose up
 ## Backend Development 
 
 ```
-npm install
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+```
+
+````
+cd backend
 npm run dev
 ```
 

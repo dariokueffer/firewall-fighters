@@ -1,3 +1,8 @@
+import dotenv from 'dotenv';
+console.log(`DOTENV_CONFIG_PATH: ${process.env.DOTENV_CONFIG_PATH}`);
+dotenv.config({ path: process.env.DOTENV_CONFIG_PATH || '.env.development' });
+
+
 import path from 'path';
 import express from 'express';
 import cors from 'cors';
