@@ -62,6 +62,11 @@ const selectEventIds = (state) => state.events.allIds;
 // returns array of events with start/end as Date type
 export const rbcEventsSelector = createSelector([selectEvents, selectEventIds], (events, eventIds) => {
   return eventIds.map((eventId) => {
+
+    if (!eventId) return null;
+    const event = events[eventId];
+    if (!event) return null;
+
     const tzOffset = new Date(events[eventId].start).getTimezoneOffset() * 60000; //offset in milliseconds
 
     let startDate = new Date(events[eventId].start);
