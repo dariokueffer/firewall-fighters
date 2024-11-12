@@ -51,15 +51,24 @@ services:
             - BACKEND_SSL=false
             - SSL=false
             - PROXY_SSL_VERIFY=off
-            # ModSecurity specific settings
             - MODSEC_RULE_ENGINE=On
+            # Add these audit settings
             - MODSEC_AUDIT_ENGINE=On
-            - PARANOIA=1 # Paranoia level (1-4)
+            - MODSEC_AUDIT_LOG_FORMAT=JSON
+            - MODSEC_AUDIT_LOG=/var/log/modsec_audit.log
+            - MODSEC_AUDIT_LOG_TYPE=Serial
+            - MODSEC_AUDIT_STORAGE=/var/log/modsec_audit
+            - MODSEC_INBOUND_ANOMALY_SCORE_THRESHOLD=2
+            - PARANOIA=1
+            - MODSEC_BLOCKING_PARANOIA=1
+        volumes:
+            - ./modsecurity-override.conf:/etc/nginx/templates/modsecurity.d/modsecurity-override.conf.template
         networks:
             - app-network
 
 volumes:
     mongo-data:
+    modsec_data:
 
 networks:
     app-network:
