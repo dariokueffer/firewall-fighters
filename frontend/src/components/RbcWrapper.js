@@ -20,7 +20,7 @@ const RbcWrapper = ({ calendars, rbcSelection, view }) => {
 
   // derived states
   const visibleCalendarIds = calendarIds.filter((id) => calendars[id].visibility === true);
-  const visibleEvents = events.filter((event) => visibleCalendarIds.includes(event.calendar));
+  const visibleEvents = events.filter((event) => visibleCalendarIds.includes(event?.calendar));
 
   // get styles for displaying calendar events
   const eventStyleGetter = (event) => {
