@@ -58,6 +58,26 @@ const schema = new mongoose.Schema({
         default: false
       },
     }
+  ],
+  notifications: [
+    {
+      type: {
+        type: String, // e.g., 'info', 'warning', 'error'
+        required: true
+      },
+      message: {
+        type: String,
+        required: true
+      },
+      read: {
+        type: Boolean,
+        default: false
+      },
+      timestamp: {
+        type: Date,
+        default: Date.now
+      }
+    }
   ]
 });
 

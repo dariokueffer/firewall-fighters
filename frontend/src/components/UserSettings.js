@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { validateFields } from '../validation';
 import { updateUser } from '../store/userSlice';
@@ -8,6 +8,8 @@ const UserSettings = () => {
   const userId = useSelector((state) => state.user.id);
   const username = useSelector((state) => state.user.username);
   const gmtOffset = useSelector((state) => state.user.gmtOffset);
+
+
 
   return (
     <div>

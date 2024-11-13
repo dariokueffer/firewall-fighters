@@ -8,7 +8,8 @@ export const initialState = {
   username: null,
   accessToken: null,
   refreshToken: null,
-  roles: []
+  roles: [],
+  notifications: [],
 };
 
 const userSlice = createSlice({
@@ -29,11 +30,14 @@ const userSlice = createSlice({
     },
     rolesUpdated(state, action) {
       state.roles = action.payload.map((item) => item.name);
+    },
+    notificationsUpdated(state, action) {
+      state.notifications = action.payload;
     }
   }
 });
 
-export const { idUpdated, usernameUpdated, accessTokenUpdated, refreshTokenUpdated, rolesUpdated } = userSlice.actions;
+export const { idUpdated, usernameUpdated, accessTokenUpdated, refreshTokenUpdated, rolesUpdated, notificationsUpdated } = userSlice.actions;
 
 export default userSlice.reducer;
 
@@ -58,6 +62,8 @@ export const loginUser = (data) => async (dispatch) => {
     dispatch(calendarsUpdated(res.data.calendarSettings));
     dispatch(accessTokenUpdated(res.data.accessToken));
     dispatch(refreshTokenUpdated(res.data.refreshToken));
+    dispatch(notificationsUpdated(res.data.notifications))
+
   } catch (e) {
     if (e.response && e.response.data.name === 'AuthorizationError') {
       // unauthorize user
@@ -77,6 +83,7 @@ export const registerUser = (data) => async (dispatch) => {
     dispatch(calendarsUpdated(res.data.calendarSettings));
     dispatch(accessTokenUpdated(res.data.accessToken));
     dispatch(refreshTokenUpdated(res.data.refreshToken));
+
   } catch (e) {
     throw e;
   }

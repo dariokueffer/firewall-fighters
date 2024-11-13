@@ -254,6 +254,15 @@ class UserService {
 
       if (!existingCalendar) {
         user.calendarSettings.push(newCalendarSetting);
+
+        user.notifications.push({
+          type: 'info',
+          message: `A new shared calendar has been added.`,
+          read: false,
+          timestamp: new Date()
+        });
+
+
         await user.save();
       }
 
