@@ -257,7 +257,7 @@ class UserService {
 
         user.notifications.push({
           type: 'info',
-          message: `A new shared calendar with ID ${calendarId} has been added.`,
+          message: `A new shared calendar has been added.`,
           read: false,
           timestamp: new Date()
         });
