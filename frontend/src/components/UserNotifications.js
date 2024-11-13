@@ -5,10 +5,6 @@ import './UserNotifications.css'; // Optional: Add a CSS file for better styling
 const UserNotifications = () => {
     const notifications = useSelector((state) => state.user.notifications);
 
-    useEffect(() => {
-        console.log(notifications);
-    }, [notifications]);
-
     return (
         <div className="user-notifications-container">
             <h4 className="heading text-primary text-center mt-4 mb-5">User Notifications</h4>
